@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
+
 /*
  * Copyright 2016-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
@@ -16,6 +18,7 @@ if (rootProject.ext.native_targets_enabled) {
 }
 
 apply from: rootProject.file("gradle/compile-js-multiplatform.gradle")
+apply from: rootProject.file("gradle/compile-wasm-multiplatform.gradle")
 
 apply from: rootProject.file('gradle/dokka.gradle.kts')
 apply from: rootProject.file('gradle/publish.gradle')
@@ -264,6 +267,15 @@ jvmTest {
 
 // Setup manifest for kotlinx-coroutines-core-jvm.jar
 jvmJar { setupManifest(it) }
+
+wasmNodeTest {
+    filter.with {
+        excludeTest("ChannelsTest", "testIterableAsReceiveChannel")
+        excludeTest("ChannelsTest", "testEmptyList")
+        excludeTest("ChannelsTest", "testToList")
+        excludeTest("ChannelBuildersFlowTest", "testConsumeAsFlowProduceBuffered")
+    }
+}
 
 /*
  * Setup manifest for kotlinx-coroutines-core.jar
