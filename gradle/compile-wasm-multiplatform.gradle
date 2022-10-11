@@ -3,27 +3,28 @@
  */
 
 kotlin {
-    js {
+    wasm {
         moduleName = project.name
         nodejs()
         compilations['main']?.dependencies {
-            api "org.jetbrains.kotlinx:atomicfu-js:$atomicfu_version"
+            api "org.jetbrains.kotlinx:atomicfu-wasm:$atomicfu_version"
         }
     }
 
     sourceSets {
-        jsMain {
+        wasmMain {
             kotlin {
                 srcDir 'jsWasm/src'
             }
         }
-        jsTest {
+        wasmTest {
             kotlin {
                 srcDir 'jsWasm/test'
             }
         }
-        jsTest.dependencies {
-            api "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
+        wasmTest.dependencies {
+            api "org.jetbrains.kotlin:kotlin-test-wasm:$kotlin_version"
         }
     }
 }
+

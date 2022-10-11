@@ -18,7 +18,7 @@ internal actual fun ensurePlatformExceptionHandlerLoaded(callback: CoroutineExce
 
 internal actual fun propagateExceptionFinalResort(exception: Throwable) {
     // log exception
-    console.error(exception)
+    console.error(exception.toString())
 }
 
 internal actual class DiagnosticCoroutineContextException actual constructor(context: CoroutineContext) :

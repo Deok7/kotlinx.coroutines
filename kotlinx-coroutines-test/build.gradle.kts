@@ -27,4 +27,14 @@ kotlin {
             }
         }
     }
+
+    wasm {
+        nodejs {
+            testTask {
+                filter.apply {
+                    excludeTest("TestDispatchersTest", "testMainMocking")
+                }
+            }
+        }
+    }
 }

@@ -158,6 +158,7 @@ configure(subprojects.findAll { !sourceless.contains(it.name) && it.name != core
         }
 
         apply from: rootProject.file("gradle/compile-js-multiplatform.gradle")
+        apply from: rootProject.file("gradle/compile-wasm-multiplatform.gradle")
         kotlin.sourceSets.commonMain.dependencies {
             api project(":$coreModule")
         }
@@ -367,4 +368,8 @@ if (CacheRedirector.enabled) {
     if (nodeJsExtension != null) {
         nodeJsExtension.nodeDownloadBaseUrl = CacheRedirector.maybeRedirect(nodeJsExtension.nodeDownloadBaseUrl)
     }
+}
+
+extensions.findByType(org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension.class).with {
+    it.nodeVersion = "20.2.0"
 }
