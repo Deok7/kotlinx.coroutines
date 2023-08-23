@@ -78,7 +78,11 @@ private open class ClearTimeout(protected val handle: Int) : CancelHandler(), Di
 }
 
 @Suppress("UNUSED_PARAMETER")
-private fun toJsAnyCallback(handle: () -> Unit): JsAny = js("handle")
+private fun setTimeout(
+    window: WindowOrWorkerGlobalScope,
+    handler: () -> Unit,
+    timeout: Int,
+): Int = js("window.setTimeout(handler, timeout)")
 
 internal class WindowDispatcher(private val window: Window) : CoroutineDispatcher(), Delay {
     private val queue = WindowMessageQueue(window)
@@ -86,12 +90,12 @@ internal class WindowDispatcher(private val window: Window) : CoroutineDispatche
     override fun dispatch(context: CoroutineContext, block: Runnable) = queue.enqueue(block)
 
     override fun scheduleResumeAfterDelay(timeMillis: Long, continuation: CancellableContinuation<Unit>) {
-        val handle = window.setTimeout(toJsAnyCallback { with(continuation) { resumeUndispatched(Unit) } }, delayToInt(timeMillis))
+        val handle = setTimeout(window, { with(continuation) { resumeUndispatched(Unit) } }, delayToInt(timeMillis))
         continuation.invokeOnCancellation(handler = WindowClearTimeout(handle).asHandler)
     }
 
     override fun invokeOnTimeout(timeMillis: Long, block: Runnable, context: CoroutineContext): DisposableHandle {
-        val handle = window.setTimeout(toJsAnyCallback(block::run), delayToInt(timeMillis))
+        val handle = setTimeout(window, block::run, delayToInt(timeMillis))
         return WindowClearTimeout(handle)
     }
 

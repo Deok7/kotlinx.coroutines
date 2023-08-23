@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import org.jetbrains.kotlin.konan.target.HostManager
 import org.jetbrains.dokka.gradle.DokkaTaskPartial
 
+import static KotlinVersion.isKotlinVersionAtLeast
 import static Projects.*
 
 apply plugin: 'jdk-convention'
@@ -158,7 +159,15 @@ configure(subprojects.findAll { !sourceless.contains(it.name) && it.name != core
         }
 
         apply from: rootProject.file("gradle/compile-js-multiplatform.gradle")
-        apply from: rootProject.file("gradle/compile-wasm-multiplatform.gradle")
+
+        // TODO: Wasm target names have been changed since 1.9.20, remove this after migration to 1.9.20
+        def isNewWasmTargetEnabled = isKotlinVersionAtLeast(ext.kotlin_version, 1, 9, 20)
+        if (isNewWasmTargetEnabled) {
+            apply from: rootProject.file("gradle/compile-wasm-multiplatform.gradle")
+        } else {
+            apply from: rootProject.file("gradle/compile-wasm-multiplatform19.gradle")
+        }
+
         kotlin.sourceSets.commonMain.dependencies {
             api project(":$coreModule")
         }
