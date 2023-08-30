@@ -4,17 +4,9 @@
 
 package kotlinx.coroutines.internal
 
-import kotlinx.atomicfu.*
-
-// Copy of Native implementation
-
 @Suppress("UNCHECKED_CAST")
 internal class CopyOnWriteList<E> : AbstractMutableList<E>() {
-
-    private val _array = atomic(arrayOfNulls<Any?>(0))
-    private var array: Array<Any?>
-        get() = _array.value
-        set(value) { _array.value = value }
+    private var array: Array<Any?> = arrayOfNulls<Any?>(0)
 
     override val size: Int
         get() = array.size
