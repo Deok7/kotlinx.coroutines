@@ -384,6 +384,7 @@ if (CacheRedirector.enabled) {
     }
 }
 
+// Update node version to support latest wasm engine
 extensions.findByType(org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension.class).with {
     it.nodeVersion = "20.2.0"
 }
