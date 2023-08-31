@@ -7,11 +7,16 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven { url "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev" }
+    // This is bootstrap wasm repo, remove it as regular atomic-fu will be published
+    maven { url "https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental" }
 }
 
 kotlin {
     jvm()
     js(IR) {
+        nodejs()
+    }
+    wasm() {
         nodejs()
     }
 
@@ -50,3 +55,13 @@ kotlin {
     }
 }
 
+// This is bootstrap atomicFU version with wasm support, remove it as regular atomic-fu will be published
+allprojects {
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            if (details.requested.name == 'atomicfu-wasm') {
+                details.useVersion '0.21.0-wasm0'
+            }
+        }
+    }
+}
