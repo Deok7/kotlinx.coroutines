@@ -39,6 +39,11 @@ kotlin {
                 implementation kotlin('test-js')
             }
         }
+        wasmTest {
+            dependencies {
+                implementation kotlin('test-wasm')
+            }
+        }
         jvmTest {
             dependencies {
                 implementation kotlin('test')
