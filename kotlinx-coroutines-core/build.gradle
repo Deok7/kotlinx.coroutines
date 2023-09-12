@@ -20,7 +20,7 @@ if (rootProject.ext.native_targets_enabled) {
 
 apply from: rootProject.file("gradle/compile-js-multiplatform.gradle")
 
-// TODO: Wasm target names have been changed since 1.9.20, remove this after migration to 1.9.20
+// TODO: Wasm target names have been changed since 1.9.20, remove this after migration to 1.9.20 (issue 3846)
 // https://github.com/Kotlin/kotlinx.coroutines/issues/3846
 def isNewWasmTargetEnabled = isKotlinVersionAtLeast(ext.kotlin_version, 1, 9, 20)
 if (isNewWasmTargetEnabled) {
