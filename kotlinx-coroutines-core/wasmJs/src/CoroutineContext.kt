@@ -41,7 +41,7 @@ public actual fun CoroutineContext.newCoroutineContext(addedContext: CoroutineCo
 internal actual inline fun <T> withCoroutineContext(context: CoroutineContext, countOrElement: Any?, block: () -> T): T = block()
 internal actual inline fun <T> withContinuationContext(continuation: Continuation<*>, countOrElement: Any?, block: () -> T): T = block()
 internal actual fun Continuation<*>.toDebugString(): String = toString()
-internal actual val CoroutineContext.coroutineName: String? get() = null // not supported on JS
+internal actual val CoroutineContext.coroutineName: String? get() = null // not supported on Wasm
 
 internal actual class UndispatchedCoroutine<in T> actual constructor(
     context: CoroutineContext,
