@@ -37,7 +37,7 @@ public actual fun CoroutineContext.newCoroutineContext(addedContext: CoroutineCo
     return this + addedContext
 }
 
-// No debugging facilities on JS
+// No debugging facilities on Wasm
 internal actual inline fun <T> withCoroutineContext(context: CoroutineContext, countOrElement: Any?, block: () -> T): T = block()
 internal actual inline fun <T> withContinuationContext(continuation: Continuation<*>, countOrElement: Any?, block: () -> T): T = block()
 internal actual fun Continuation<*>.toDebugString(): String = toString()
