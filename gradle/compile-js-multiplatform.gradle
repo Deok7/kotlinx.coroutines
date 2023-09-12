@@ -14,12 +14,12 @@ kotlin {
     sourceSets {
         jsMain {
             kotlin {
-                srcDir 'jsWasm/src'
+                srcDir 'jsAndWasmShared/src'
             }
         }
         jsTest {
             kotlin {
-                srcDir 'jsWasm/test'
+                srcDir 'jsAndWasmShared/test'
             }
         }
         jsTest.dependencies {
