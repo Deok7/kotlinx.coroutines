@@ -64,7 +64,7 @@ kotlin {
 allprojects {
     configurations.all {
         resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-            if (details.requested.name == 'atomicfu-wasm') {
+            if (details.requested.name == atomicfu_wasm_version) {
                 details.useVersion '0.21.0-wasm0'
             }
         }
