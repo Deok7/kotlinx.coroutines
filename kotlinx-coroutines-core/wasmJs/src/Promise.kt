@@ -43,7 +43,6 @@ public fun <T> CoroutineScope.promise(
 /**
  * Converts this deferred value to the instance of [Promise<JsAny?>].
  */
-@Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
 public fun <T> Deferred<T>.asPromise(): Promise<JsAny?> {
     val promise = Promise<JsAny?> { resolve, reject ->
         invokeOnCompletion {
