@@ -6,12 +6,14 @@ package kotlinx.coroutines
 
 import kotlinx.coroutines.internal.*
 
+@AllowDifferentMembersInActual
 internal actual abstract class CompletionHandlerBase actual constructor() : LockFreeLinkedListNode(), CompletionHandler {
     actual abstract override fun invoke(cause: Throwable?)
 }
 
 internal actual inline val CompletionHandlerBase.asHandler: CompletionHandler get() = this
 
+@AllowDifferentMembersInActual
 internal actual abstract class CancelHandlerBase actual constructor() : CompletionHandler {
     actual abstract override fun invoke(cause: Throwable?)
 }
