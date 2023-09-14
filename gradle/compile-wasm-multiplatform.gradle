@@ -15,13 +15,11 @@ kotlin {
         wasmJsMain {
             kotlin {
                 srcDir 'jsAndWasmShared/src'
-                srcDir 'wasmJs/src'
             }
         }
         wasmJsTest {
             kotlin {
                 srcDir 'jsAndWasmShared/test'
-                srcDir 'wasmJs/test'
             }
         }
         wasmJsTest.dependencies {

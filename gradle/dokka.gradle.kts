@@ -67,15 +67,8 @@ if (project.name == "kotlinx-coroutines-core") {
                 makeLinkMapping(project.file("jvm"))
             }
 
-            val isNewWasmTargetEnabled = isKotlinVersionAtLeast(kotlin_version, 1, 9, 20)
-            if (isNewWasmTargetEnabled) {
-                val wasmJsMain by getting {
-                    makeLinkMapping(project.file("wasm"))
-                }
-            } else {
-                val wasmMain by getting {
-                    makeLinkMapping(project.file("wasm"))
-                }
+            val wasmJsMain by getting {
+                makeLinkMapping(project.file("wasm"))
             }
         }
     }

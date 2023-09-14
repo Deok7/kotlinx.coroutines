@@ -54,10 +54,7 @@ public actual typealias TestResult = Unit
  * }
  * ```
  */
-@Suppress(
-    // fixme replace the suppress with AllowDifferentMembersInActual once stdlib is updated to 1.9.20 https://github.com/Kotlin/kotlinx.coroutines/issues/3846
-    "ACTUAL_CLASSIFIER_MUST_HAVE_THE_SAME_MEMBERS_AS_NON_FINAL_EXPECT_CLASSIFIER"
-)
+@AllowDifferentMembersInActual
 public actual open class TestBase(private var disableOutCheck: Boolean)  {
 
     actual constructor(): this(false)
@@ -83,13 +80,10 @@ public actual open class TestBase(private var disableOutCheck: Boolean)  {
      * Throws [IllegalStateException] like `error` in stdlib, but also ensures that the test will not
      * complete successfully even if this exception is consumed somewhere in the test.
      */
-    // fixme replace the suppress with AllowDifferentMembersInActual once stdlib is updated to 1.9.20 https://github.com/Kotlin/kotlinx.coroutines/issues/3846
     public actual fun error(message: Any, cause: Throwable?): Nothing {
         throw makeError(message, cause)
     }
 
-    // fixme replace the suppress with AllowDifferentMembersInActual once stdlib is updated to 1.9.20 https://github.com/Kotlin/kotlinx.coroutines/issues/3846
-    @Suppress("NON_ACTUAL_MEMBER_DECLARED_IN_EXPECT_NON_FINAL_CLASSIFIER_ACTUALIZATION")
     public fun hasError() = error.get() != null
 
     private fun makeError(message: Any, cause: Throwable? = null): IllegalStateException =
@@ -113,8 +107,6 @@ public actual open class TestBase(private var disableOutCheck: Boolean)  {
      * Throws [IllegalStateException] when `value` is false like `check` in stdlib, but also ensures that the
      * test will not complete successfully even if this exception is consumed somewhere in the test.
      */
-    // fixme replace the suppress with AllowDifferentMembersInActual once stdlib is updated to 1.9.20 https://github.com/Kotlin/kotlinx.coroutines/issues/3846
-    @Suppress("NON_ACTUAL_MEMBER_DECLARED_IN_EXPECT_NON_FINAL_CLASSIFIER_ACTUALIZATION")
     public inline fun check(value: Boolean, lazyMessage: () -> Any) {
         if (!value) error(lazyMessage())
     }
@@ -162,16 +154,12 @@ public actual open class TestBase(private var disableOutCheck: Boolean)  {
         }
     })
 
-    // fixme replace the suppress with AllowDifferentMembersInActual once stdlib is updated to 1.9.20 https://github.com/Kotlin/kotlinx.coroutines/issues/3846
-    @Suppress("NON_ACTUAL_MEMBER_DECLARED_IN_EXPECT_NON_FINAL_CLASSIFIER_ACTUALIZATION")
     fun println(message: Any?) {
         if (disableOutCheck) kotlin.io.println(message)
         else previousOut.println(message)
     }
 
     @Before
-    // fixme replace the suppress with AllowDifferentMembersInActual once stdlib is updated to 1.9.20 https://github.com/Kotlin/kotlinx.coroutines/issues/3846
-    @Suppress("NON_ACTUAL_MEMBER_DECLARED_IN_EXPECT_NON_FINAL_CLASSIFIER_ACTUALIZATION")
     fun before() {
         initPoolsBeforeTest()
         threadsBefore = currentThreads()
@@ -187,8 +175,6 @@ public actual open class TestBase(private var disableOutCheck: Boolean)  {
         }
     }
 
-    // fixme replace the suppress with AllowDifferentMembersInActual once stdlib is updated to 1.9.20 https://github.com/Kotlin/kotlinx.coroutines/issues/3846
-    @Suppress("NON_ACTUAL_MEMBER_DECLARED_IN_EXPECT_NON_FINAL_CLASSIFIER_ACTUALIZATION")
     @After
     fun onCompletion() {
         // onCompletion should not throw exceptions before it finishes all cleanup, so that other tests always
@@ -216,22 +202,17 @@ public actual open class TestBase(private var disableOutCheck: Boolean)  {
         error.get()?.let { throw it }
     }
 
-    // fixme replace the suppress with AllowDifferentMembersInActual once stdlib is updated to 1.9.20 https://github.com/Kotlin/kotlinx.coroutines/issues/3846
-    @Suppress("NON_ACTUAL_MEMBER_DECLARED_IN_EXPECT_NON_FINAL_CLASSIFIER_ACTUALIZATION")
     fun initPoolsBeforeTest() {
         DefaultScheduler.usePrivateScheduler()
     }
 
-    // fixme replace the suppress with AllowDifferentMembersInActual once stdlib is updated to 1.9.20 https://github.com/Kotlin/kotlinx.coroutines/issues/3846
-    @Suppress("NON_ACTUAL_MEMBER_DECLARED_IN_EXPECT_NON_FINAL_CLASSIFIER_ACTUALIZATION")
     fun shutdownPoolsAfterTest() {
         DefaultScheduler.shutdown(SHUTDOWN_TIMEOUT)
         DefaultExecutor.shutdownForTests(SHUTDOWN_TIMEOUT)
         DefaultScheduler.restore()
     }
 
-    // fixme replace the suppress with AllowDifferentMembersInActual once stdlib is updated to 1.9.20 https://github.com/Kotlin/kotlinx.coroutines/issues/3846
-    @Suppress("ACTUAL_WITHOUT_EXPECT", "ACTUAL_FUNCTION_WITH_DEFAULT_ARGUMENTS")
+    @Suppress("ACTUAL_FUNCTION_WITH_DEFAULT_ARGUMENTS")
     public actual fun runTest(
         expected: ((Throwable) -> Boolean)? = null,
         unhandled: List<(Throwable) -> Boolean> = emptyList(),
@@ -265,16 +246,12 @@ public actual open class TestBase(private var disableOutCheck: Boolean)  {
             error("Too few unhandled exceptions $exCount, expected ${unhandled.size}")
     }
 
-    // fixme replace the suppress with AllowDifferentMembersInActual once stdlib is updated to 1.9.20 https://github.com/Kotlin/kotlinx.coroutines/issues/3846
-    @Suppress("NON_ACTUAL_MEMBER_DECLARED_IN_EXPECT_NON_FINAL_CLASSIFIER_ACTUALIZATION")
     protected inline fun <reified T: Throwable> assertFailsWith(block: () -> Unit): T {
         val result = runCatching(block)
         assertTrue(result.exceptionOrNull() is T, "Expected ${T::class}, but had $result")
         return result.exceptionOrNull()!! as T
     }
 
-    // fixme replace the suppress with AllowDifferentMembersInActual once stdlib is updated to 1.9.20 https://github.com/Kotlin/kotlinx.coroutines/issues/3846
-    @Suppress("NON_ACTUAL_MEMBER_DECLARED_IN_EXPECT_NON_FINAL_CLASSIFIER_ACTUALIZATION")
     protected suspend fun currentDispatcher() = coroutineContext[ContinuationInterceptor]!!
 }
 
