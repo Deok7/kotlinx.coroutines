@@ -16,7 +16,7 @@ kotlin {
     js(IR) {
         nodejs()
     }
-    wasm() {
+    wasmJs() {
         nodejs()
     }
 
@@ -41,7 +41,7 @@ kotlin {
         }
         wasmTest {
             dependencies {
-                implementation kotlin('test-wasm')
+                implementation kotlin('test-wasm-js')
             }
         }
         jvmTest {
