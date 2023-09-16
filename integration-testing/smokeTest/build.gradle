@@ -3,12 +3,12 @@ plugins {
 }
 
 repositories {
-    // Coroutines from the outer project are published by previous CI buils step
-    mavenLocal()
     mavenCentral()
     maven { url "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev" }
     // This is bootstrap wasm repo, remove it as regular atomic-fu will be published
     maven { url "https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental" }
+    // Coroutines from the outer project are published by previous CI buils step
+    mavenLocal()
 }
 
 kotlin {
