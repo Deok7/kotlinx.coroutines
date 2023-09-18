@@ -13,15 +13,12 @@ kotlin {
 
     sourceSets {
         jsMain {
-            kotlin {
-                srcDir 'jsAndWasmShared/src'
-            }
+            dependsOn(jsAndWasmSharedMain)
         }
         jsTest {
-            kotlin {
-                srcDir 'jsAndWasmShared/test'
-            }
+            dependsOn(jsAndWasmSharedTest)
         }
+
         jsTest.dependencies {
             api "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
         }

@@ -5,16 +5,32 @@
 package kotlinx.coroutines
 
 import kotlinx.coroutines.internal.*
-import org.w3c.dom.*
 import kotlin.coroutines.*
+
+public expect abstract class W3CWindow
+internal expect fun w3cSetTimeout(window: W3CWindow, handler: () -> Unit, timeout: Int): Int
+internal expect fun w3cSetTimeout(handler: () -> Unit, timeout: Int): Int
+internal expect fun w3cClearTimeout(handle: Int)
+internal expect fun w3cClearTimeout(window: W3CWindow, handle: Int)
+
+internal expect class ScheduledMessageQueue(dispatcher: SetTimeoutBasedDispatcher) : MessageQueue {
+    override fun schedule()
+    override fun reschedule()
+    internal fun setTimeout(timeout: Int)
+}
+
+internal expect class WindowMessageQueue(window: W3CWindow) : MessageQueue {
+    override fun schedule()
+    override fun reschedule()
+}
 
 private const val MAX_DELAY = Int.MAX_VALUE.toLong()
 
 private fun delayToInt(timeMillis: Long): Int =
     timeMillis.coerceIn(0, MAX_DELAY).toInt()
 
-internal sealed class SetTimeoutBasedDispatcher: CoroutineDispatcher(), Delay {
-    val messageQueue = ScheduledMessageQueue(this)
+internal abstract class SetTimeoutBasedDispatcher: CoroutineDispatcher(), Delay {
+    internal val messageQueue = ScheduledMessageQueue(this)
 
     abstract fun scheduleQueueProcessing()
 
@@ -28,48 +44,47 @@ internal sealed class SetTimeoutBasedDispatcher: CoroutineDispatcher(), Delay {
     }
 
     override fun invokeOnTimeout(timeMillis: Long, block: Runnable, context: CoroutineContext): DisposableHandle {
-        val handle = setTimeout({ block.run() }, delayToInt(timeMillis))
+        val handle = w3cSetTimeout({ block.run() }, delayToInt(timeMillis))
         return ClearTimeout(handle)
     }
 
     override fun scheduleResumeAfterDelay(timeMillis: Long, continuation: CancellableContinuation<Unit>) {
-        val handle = setTimeout({ with(continuation) { resumeUndispatched(Unit) } }, delayToInt(timeMillis))
+        val handle = w3cSetTimeout({ with(continuation) { resumeUndispatched(Unit) } }, delayToInt(timeMillis))
         continuation.invokeOnCancellation(handler = ClearTimeout(handle).asHandler)
     }
 }
 
-internal class WindowDispatcher(private val window: Window) : CoroutineDispatcher(), Delay {
+internal class WindowDispatcher(private val window: W3CWindow) : CoroutineDispatcher(), Delay {
     private val queue = WindowMessageQueue(window)
 
     override fun dispatch(context: CoroutineContext, block: Runnable) = queue.enqueue(block)
 
     override fun scheduleResumeAfterDelay(timeMillis: Long, continuation: CancellableContinuation<Unit>) {
-        val handle = setTimeout(window, { with(continuation) { resumeUndispatched(Unit) } }, delayToInt(timeMillis))
+        val handle = w3cSetTimeout(window, { with(continuation) { resumeUndispatched(Unit) } }, delayToInt(timeMillis))
         continuation.invokeOnCancellation(handler = WindowClearTimeout(handle).asHandler)
     }
 
     override fun invokeOnTimeout(timeMillis: Long, block: Runnable, context: CoroutineContext): DisposableHandle {
-        val handle = setTimeout(window, block::run, delayToInt(timeMillis))
+        val handle = w3cSetTimeout(window, block::run, delayToInt(timeMillis))
         return WindowClearTimeout(handle)
     }
 
     private inner class WindowClearTimeout(handle: Int) : ClearTimeout(handle) {
         override fun dispose() {
-            window.clearTimeout(handle)
+            w3cClearTimeout(window, handle)
         }
     }
 }
 
 internal object SetTimeoutDispatcher : SetTimeoutBasedDispatcher() {
     override fun scheduleQueueProcessing() {
-        setTimeout(messageQueue.processQueue, 0)
+        messageQueue.setTimeout(0)
     }
 }
 
 private open class ClearTimeout(protected val handle: Int) : CancelHandler(), DisposableHandle {
-
     override fun dispose() {
-        clearTimeout(handle)
+        w3cClearTimeout(handle)
     }
 
     override fun invoke(cause: Throwable?) {

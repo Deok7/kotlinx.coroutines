@@ -161,6 +161,8 @@ configure(subprojects.findAll { !sourceless.contains(it.name) && it.name != core
             apply from: rootProject.file("gradle/compile-native-multiplatform.gradle")
         }
 
+        apply from: rootProject.file("gradle/compile-jsAndWasmShared-multiplatform.gradle")
+
         apply from: rootProject.file("gradle/compile-js-multiplatform.gradle")
 
         apply from: rootProject.file("gradle/compile-wasm-multiplatform.gradle")
