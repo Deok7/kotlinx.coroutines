@@ -70,6 +70,10 @@ if (project.name == "kotlinx-coroutines-core") {
             val wasmJsMain by getting {
                 makeLinkMapping(project.file("wasm"))
             }
+
+            val wasmWasiMain by getting {
+                makeLinkMapping(project.file("wasm"))
+            }
         }
     }
 }

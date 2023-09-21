@@ -28,7 +28,18 @@ kotlin {
         }
     }
 
-    wasm {
+    wasmJs {
+        nodejs {
+            testTask {
+                filter.apply {
+                    // https://youtrack.jetbrains.com/issue/KT-61888
+                    excludeTest("TestDispatchersTest", "testMainMocking")
+                }
+            }
+        }
+    }
+
+    wasmWasi {
         nodejs {
             testTask {
                 filter.apply {

@@ -11,6 +11,14 @@ kotlin {
         }
     }
 
+    wasmWasi {
+        moduleName = project.name
+        nodejs()
+        compilations['main']?.dependencies {
+            api "org.jetbrains.kotlinx:atomicfu-wasm-wasi:$atomicfu_version"
+        }
+    }
+
     sourceSets {
         wasmJsMain {
             dependsOn(jsAndWasmSharedMain)
@@ -21,6 +29,17 @@ kotlin {
 
         wasmJsTest.dependencies {
             api "org.jetbrains.kotlin:kotlin-test-wasm-js:$kotlin_version"
+        }
+
+        wasmWasiMain {
+            dependsOn(jsAndWasmSharedMain)
+        }
+
+        wasmWasiTest {
+            dependsOn(jsAndWasmSharedTest)
+            dependencies {
+                api "org.jetbrains.kotlin:kotlin-test-wasm-wasi:$kotlin_version"
+            }
         }
     }
 }

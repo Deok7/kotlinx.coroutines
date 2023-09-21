@@ -22,9 +22,9 @@ repositories {
     if (!kotlinDevUrl.isNullOrEmpty()) {
         maven(kotlinDevUrl)
     }
-    if (buildSnapshotTrain) {
+//    if (buildSnapshotTrain) {
         mavenLocal()
-    }
+//    }
 }
 
 val gradleProperties = Properties().apply {
