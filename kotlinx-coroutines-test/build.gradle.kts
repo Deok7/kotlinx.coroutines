@@ -28,7 +28,7 @@ kotlin {
         }
     }
 
-    wasm {
+    wasmJs {
         nodejs {
             testTask {
                 filter.apply {

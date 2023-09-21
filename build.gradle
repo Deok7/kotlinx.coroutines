@@ -378,9 +378,16 @@ if (CacheRedirector.enabled) {
     }
 }
 
-// Drop this configuration when the Node.JS version in KGP is at least 20.2.0
+// Drop this configuration when the Node.JS version in KGP will support wasm gc milestone 4
 // check it here:
 // https://github.com/JetBrains/kotlin/blob/master/libraries/tools/kotlin-gradle-plugin/src/common/kotlin/org/jetbrains/kotlin/gradle/targets/js/nodejs/NodeJsRootExtension.kt
 extensions.findByType(org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension.class).with {
-    it.nodeVersion = "20.2.0"
+    // canary nodejs that supports recent Wasm GC changes
+    it.nodeVersion = "21.0.0-v8-canary202309167e82ab1fa2"
+    it.nodeDownloadBaseUrl = "https://nodejs.org/download/v8-canary"
+}
+
+// Drop this when node js version become stable
+tasks.withType(org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask).configureEach {
+    args.add("--ignore-engines")
 }
